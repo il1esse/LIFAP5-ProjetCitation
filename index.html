@@ -121,12 +121,10 @@
             <input type="password" id="pass" name="password"
                    minlength="8" required>
         </div>
+
         <div id="CONNEXIONBOUT">
-          <input class="button" type="submit" onclick="testAPI()" value="Connexion">
+          <input   class="button" type="submit" onclick="testAPI()" value="Connexion">
         </div>
-        
-
-
 
         </section>
         <footer class="modal-card-foot" style="justify-content: flex-end">
@@ -173,11 +171,6 @@
             <div class="media-content">
               <div>
                 <div class="content">
-                <!--  <p>Nouvelle citation : <input type="text" id="add-citation" size="50"><br></p> 
-                <p>Personnage :<input type="text" id="add-character" name="name" size="50"><br></p>
-                <p>Direction :<input type="text" id="add-direction" name="name" size="50"><br> </p>
-                <p>Origine du personnage :<input type="text" id="add-origin" name="name" size="50"><br></p>
-                <p>Ajouté par :<input type="text" id="add-addedBy" name="name" size="50"><br></p>-->
                 <div class="field">
                   <label class="label">Citation :</label>
                   <div class="control">
@@ -199,11 +192,11 @@
                 <div class="control">
                   <label class="label">Direction du personnage :</label>
                   <label class="radio">
-                    <input type="radio" id="add-direction" name="answer">
+                    <input type="radio" id="add-directionleft" name="answer">
                     Gauche
                   </label>
                   <label class="radio">
-                    <input type="radio" id="add-direction" name="answer">
+                    <input type="radio" id="add-directionright" name="answer">
                     Droite
                   </label>
                 <div class="field">
@@ -216,7 +209,7 @@
                 <p id="ERREURAJOUT"></p>
                 </div>
                 <p id=resultat></p>
-                <input class="button" type="submit" onclick="Ajoutercitation()" value="Envoyer le formulaire">
+                <input class="button" type="submit" onclick="Ajoutercitation();croix()" value="Envoyer le formulaire">
                 
                 </div>
               </div>

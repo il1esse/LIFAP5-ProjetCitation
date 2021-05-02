@@ -3,7 +3,7 @@
  */
 const apiKey = "a5ab11dd-241f-4ca7-9726-06723117dd5f";
 const serverUrl = "https://lifap5.univ-lyon1.fr";
-/*eslint max-len: ["error", { "code": 80 }]*/
+
 
 
 /* ******************************************************************
@@ -59,10 +59,15 @@ function remplirCit(id){
       const data_filter = filtreTexte(data, recherche) 
       console.log(data_filter)
       const str = Object.entries(data_filter).map(n => {
-         return `<tr><th>X</th><td>${n[1].character}</td><td>${n[1].quote}</td><td><input class="button" onclick = "detail('${n[1]._id}')" type="button" value="Détail"></input></td></</tr>`});
+         return `<tr><th>X</th><td>${n[1].character}</td><td>${n[1].quote}</td>
+         <td><input class="button" onclick = "detail('${n[1]._id}')" type="button" 
+         value="Détail"></input></td></</tr>`});
       document.getElementById("body-citation").innerHTML += str.join(" ")
 })} 
 
+/**
+ * Fonction qui affiche des citations aléatoire à chaque fois que la page s'actualise
+ */
 function citAlea(){
   fetch(serverUrl + "/citations")
   .then(res => res.json())
@@ -93,7 +98,10 @@ function citAlea(){
 )})}
 citAlea();
 
-
+/**
+ * Fonction détail qui affiche dans une fenetre modale la citation, le personnage,etc...
+ * @param {id} id identifiant de la citation 
+ */
 function detail(id){
   clic()
   fetch(serverUrl + "/citations/" + id)
@@ -104,58 +112,92 @@ function detail(id){
     document.getElementById("det-image").src = data.image
     document.getElementById("det-direction").innerHTML = "Direction: "+data.characterDirection
     document.getElementById("det-origin").innerHTML = "Origine: " +  data.origin
-    if(data.addedBy == undefined)
-    {
-
-    }else
-    {
       document.getElementById("det-addedBy").innerHTML = "Ajouté par: " + data.addedBy
-    }
     })}
 
+
+/**
+ * Fonction qui ajoute une citation au serveur
+ */
 function Ajoutercitation()
 {
   const formcitation = document.getElementById("add-citation").value;
   const formorigin = document.getElementById("add-origin").value;
   const formcharacter = document.getElementById("add-character").value;
-  const formdirection = document.getElementById("add-direction").value;
+  const formdirectionleft = document.getElementById("add-directionleft").value;
   const formimage = document.getElementById("add-image").value;
   if((formcitation | formorigin | formcharacter)== null)
-  {
     document.getElementById("resultat").innerHTML = "L'un des champs n'est pas remplit"
-  }
   else
   {
+    console.log(formdirectionleft)
     fetch(serverUrl + "/citations",
     {
-    method: 'POST',
-    headers: { "x-api-key": apiKey, 'Content-Type': 'application/json'},
-    body: JSON.stringify({ "quote" : formcitation,"origin":formorigin,"character":formcharacter,"characterDirection":formdirection,"image":formimage } ),
-  })
-    .then((r) => r.json())
-    .then((data) => {
-      data.quote = formcitation
-      data.origin = formorigin
-      data.character = formcharacter
-      data.characterDirection =formdirection
-      data.image = formimage
+      method: 'POST',
+      headers: { "x-api-key": apiKey, 'Content-Type': 'application/json'},
+      body: JSON.stringify({ "quote" : formcitation,"origin":formorigin,
+      "character":formcharacter,"characterDirection":formdirectionleft,
+      "image":formimage } ), })
+      .then((r) => r.json())
+      .then((data) => {
+        data.quote = formcitation
+        data.origin = formorigin
+        data.character = formcharacter
+        console.log(formdirectionleft)
+        if(formdirectionleft == "on")
+          data.characterDirection = "Left";
+          else
+          data.characterDirection = "Right";
+        data.image = formimage
     })}}
 
+/**
+ * Fonction qui ouvre la fenetre modale détail de citation quand on clique sur le bouton détail d'une citation
+ */
 function clic()
 {
   document.getElementById('modal').className = "modal is-active"; 
 }
+
+/**
+ * Fonction qui ferme la fenetre modale des détail des citations et d'ajout de citation quand on clique sur la croix
+ */
 function croix()
 {
   document.getElementById('modal').className = "modal";
   document.getElementById('modalajout').className = "modal";
 }
 
-
+/**
+ * Fenetre qui ouvre la fenetre modale d'ajout de citation quand on clique sur le bouton ajouter une citation 
+ */
 function fenetreaddcit()
 {
   document.getElementById('modalajout').className = "modal is-active";
 }
+
+
+/**
+ * fonction connexion qui test une cle API
+ */
+function testAPI(){
+  const APIID = document.getElementById("pass").value;
+  const disp = document.getElementById("APICHAMP");
+  //const elt5 = document.getElementById("btn-open-login-modal");
+  const a = document.getElementById("CONNEXIONBOUT");
+  fetch(serverUrl + "/whoami", { headers: { "x-api-key": APIID } })
+  .then((response) => response.json())
+  .then((jsonData) => {
+    if (jsonData.status && Number(jsonData.status) != 200) {
+    }
+      else {
+        disp.innerHTML = "Bonjour " + jsonData.login ;
+        a.innerHTML = '<input class="button" type="submit" onclick="history.go(0)" value="Deconnexion"></input>';
+      } 
+}
+  )
+}
+testAPI();
 
 /**
  * Mets au besoin à jour l'état courant lors d'un click sur un tab.
